@@ -1,4 +1,4 @@
-package com.bfn.bfn_supplier_app_repo;
+package com.bfn.supplierapp;
 
 import io.flutter.embedding.android.FlutterActivity;
 

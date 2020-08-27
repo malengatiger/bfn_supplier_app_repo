@@ -8,6 +8,7 @@ import 'package:bfnlibrary/net_util.dart';
 import 'package:bfnlibrary/util/functions.dart';
 import 'package:bfnlibrary/util/prefs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 
 BFNBloc bfnBloc = BFNBloc();
@@ -35,7 +36,7 @@ class BFNBloc {
   Stream get invoiceStream => _invoiceFCMController.stream;
   Stream get offerStream => _offerFCMController.stream;
   Stream get dashboardStream => _dashController.stream;
-  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseAuth auth;
   FirebaseUser _user;
   AccountInfo account;
 
@@ -96,9 +97,17 @@ class BFNBloc {
     }
   }
 
+  bool firebaseInitialized = false;
+//  FirebaseFirestore _firestore;
   Future<bool> isUserAuthenticated() async {
     debugPrint('Bloc:  🥏  🥏  🥏  isUserAuthenticated .....');
-
+    if (!firebaseInitialized) {
+      await Firebase.initializeApp();
+      debugPrint('🔵 🔵 🔵 🔵 🔵 🔵 🔵 🔵 Firebase has been initialized 🍎');
+//      _firestore = Firestore.instance;
+      firebaseInitialized = true;
+      auth = FirebaseAuth.instance;
+    }
     var user = await getFirebaseUser();
     if (user == null) {
       debugPrint('🍎 🍎 🍊 User NOT authenticated! 🍎');
