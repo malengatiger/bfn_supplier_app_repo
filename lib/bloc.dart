@@ -7,6 +7,7 @@ import 'package:bfnlibrary/data/invoice_offer.dart';
 import 'package:bfnlibrary/net_util.dart';
 import 'package:bfnlibrary/util/functions.dart';
 import 'package:bfnlibrary/util/prefs.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -87,9 +88,7 @@ class BFNBloc {
   }
 
   Future getFirebaseUser() async {
-//    await init();
-    //return await auth().currentUser;
-    var user = await auth.onAuthStateChanged.first;
+    var user = auth.currentUser;
     if (user != null) {
       print('🍊 🍊 🍊 🍊 🍊 🍊 Firebase user is logged in');
     } else {
@@ -98,13 +97,13 @@ class BFNBloc {
   }
 
   bool firebaseInitialized = false;
-//  FirebaseFirestore _firestore;
+  FirebaseFirestore _firestore;
   Future<bool> isUserAuthenticated() async {
-    debugPrint('Bloc:  🥏  🥏  🥏  isUserAuthenticated .....');
+    debugPrint('Bloc:  🥏  🥏  🥏  .............. isUserAuthenticated .....');
     if (!firebaseInitialized) {
       await Firebase.initializeApp();
       debugPrint('🔵 🔵 🔵 🔵 🔵 🔵 🔵 🔵 Firebase has been initialized 🍎');
-//      _firestore = Firestore.instance;
+      _firestore = FirebaseFirestore.instance;
       firebaseInitialized = true;
       auth = FirebaseAuth.instance;
     }

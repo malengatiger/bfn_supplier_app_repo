@@ -1,3 +1,4 @@
+import 'package:bfn_supplier_app_repo/ui/dashboard.dart';
 import 'package:bfn_supplier_app_repo/ui/settings.dart';
 import 'package:bfnlibrary/data/account.dart';
 import 'package:bfnlibrary/data/node_info.dart';
@@ -43,6 +44,7 @@ class _DevSignInState extends State<DevSignIn> {
     setState(() {
       isBusy = true;
     });
+    print('🌸 🌸 🌸 _getUsers ............');
     try {
       _users = await Net.getUsers();
       _filter();
@@ -98,11 +100,17 @@ class _DevSignInState extends State<DevSignIn> {
         await auth.signInWithEmailAndPassword(email: email, password: pass);
     if (authResult.user != null) {
       print(
-          '🔑 🔑 🔑 🔑 🔑 ${authResult.user.displayName} 🔑 has logged in, starting Profile settings');
-      Navigator.push(
+          '🔑 🔑 🔑 🔑 🔑 USER: ${authResult.user.email} 🔑 has logged in, starting Profile settings');
+      await Navigator.push(
           context,
           SlideRightRoute(
             widget: Settings(m),
+          ));
+
+      Navigator.push(
+          context,
+          SlideRightRoute(
+            widget: Dashboard(),
           ));
     } else {
       AppSnackbar.showErrorSnackbar(

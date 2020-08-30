@@ -32,11 +32,14 @@ class _SettingsState extends State<Settings> implements SnackBarListener {
   @override
   void initState() {
     super.initState();
+    p(' 🥏 🥏 🥏 Settings: Account to be processed for profiles :  🥏 🥏 🥏 ${widget.account.toJson()}');
     _getExistingProfiles();
   }
 
   void _getExistingProfiles() async {
+    p('Getting existing _supplierProfile  🍊 🍊 🍊 ....');
     _supplierProfile = await Net.getSupplierProfile(widget.account.identifier);
+    p('Getting existing _investorProfile  🍊 🍊 🍊 ....');
     _investorProfile = await Net.getInvestorProfile(widget.account.identifier);
 
     if (_supplierProfile != null) {
@@ -56,24 +59,27 @@ class _SettingsState extends State<Settings> implements SnackBarListener {
     setState(() {});
   }
 
-  Future _createSupplier() async {
+  Future _createSupplierProfile() async {
+    p(' 🥏 🥏 🥏 Settings: _createSupplierProfile ....');
     _supplierProfile = SupplierProfile(
         issuedBy: "me",
         maximumDiscount: maximumDiscount,
         date: DateTime.now().toIso8601String(),
         accountId: widget.account.identifier);
     var result = await Net.createSupplierProfile(_supplierProfile);
-    print('🍎 🍎 🍎 Result from _createInvestorProfile: 🍎 $result');
+    p('🍎 🍎 🍎 Result from _createSupplierProfile: 🍎 $result');
   }
 
   Future _createInvestorProfile() async {
+    p(' 🥏 🥏 🥏 Settings: _createInvestorProfile .... ');
     _investorProfile = InvestorProfile(
         issuedBy: "me",
         accountId: widget.account.identifier,
         date: DateTime.now().toIso8601String(),
         defaultDiscount: defaultDiscount,
         minimumInvoiceAmount: minimumInvoiceAmt,
-        maximumInvoiceAmount: maximumInvoiceAmt);
+        maximumInvoiceAmount: maximumInvoiceAmt,
+        totalInvestment: totalInvestmentAmt);
     var result = await Net.createInvestorProfile(_investorProfile);
     print('🍊 🍊 🍊 Result from _createInvestorProfile: 🍊 $result');
   }
@@ -83,7 +89,7 @@ class _SettingsState extends State<Settings> implements SnackBarListener {
       isBusy = true;
     });
     try {
-      await _createSupplier();
+      await _createSupplierProfile();
       await _createInvestorProfile();
 
       setState(() {
@@ -101,6 +107,8 @@ class _SettingsState extends State<Settings> implements SnackBarListener {
       setState(() {
         isBusy = false;
       });
+      AppSnackbar.showErrorSnackbar(
+          scaffoldKey: _key, message: 'Profile creation failed');
     }
   }
 
@@ -115,7 +123,10 @@ class _SettingsState extends State<Settings> implements SnackBarListener {
     return Scaffold(
       key: _key,
       appBar: AppBar(
-        title: Text("Profile Settings"),
+        title: Text(
+          "Profile Settings",
+          style: Styles.whiteSmall,
+        ),
         bottom: PreferredSize(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -123,7 +134,7 @@ class _SettingsState extends State<Settings> implements SnackBarListener {
                 children: <Widget>[
                   Text(
                     widget.account.name,
-                    style: Styles.blackBoldMedium,
+                    style: Styles.blackMedium,
                   ),
                   SizedBox(
                     height: 12,
@@ -354,6 +365,9 @@ class _SettingsState extends State<Settings> implements SnackBarListener {
                                 style: Styles.whiteMedium,
                               ),
                             ),
+                          ),
+                          SizedBox(
+                            height: 48,
                           ),
                         ],
                       )),

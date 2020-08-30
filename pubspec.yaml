@@ -29,4 +29,5 @@ flutter:
      - assets/currencies/
      - assets/logo/
      - assets/images/
+     - .env
 
